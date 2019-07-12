@@ -1,0 +1,198 @@
+{
+	"info": {
+		"_postman_id": "3f774c34-df0d-4521-a3ea-725c52a56056",
+		"name": "PleoDox Community",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Generate template - single template",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\t\"order\": {\n\t\t\t\"number\": \"1\",\n\t\t\t\"name\": \"John\",\n\t\t\t\"lastname\": \"Doe\",\n\t\t\t\"glows\": {\n\t\t\t\t\"glow\": [\n\t\t\t\t\t{\n\t\t\t\t\t\t\"color\": \"red\",\n\t\t\t\t\t\t\"size\": \"XL\"\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\t\"color\": \"yellow\",\n\t\t\t\t\t\t\"size\": \"S\"\n\t\t\t\t\t}\n\t\t\t\t]\n\t\t\t}\n\t\t}\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/templates?template=sample.docx",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"templates"
+					],
+					"query": [
+						{
+							"key": "template",
+							"value": "sample.docx"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generate template - two templates",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\t\"order\": {\n\t\t\t\"number\": \"1\",\n\t\t\t\"name\": \"John\",\n\t\t\t\"lastname\": \"Doe\",\n\t\t\t\"glows\": {\n\t\t\t\t\"glow\": [\n\t\t\t\t\t{\n\t\t\t\t\t\t\"color\": \"red\",\n\t\t\t\t\t\t\"size\": \"XL\"\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\t\"color\": \"yellow\",\n\t\t\t\t\t\t\"size\": \"S\"\n\t\t\t\t\t}\n\t\t\t\t]\n\t\t\t}\n\t\t}\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/templates?template=sample.docx&template=sample2.docx",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"templates"
+					],
+					"query": [
+						{
+							"key": "template",
+							"value": "sample.docx"
+						},
+						{
+							"key": "template",
+							"value": "sample2.docx"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generate template - two templates  with format PDF",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\t\"order\": {\n\t\t\t\"number\": \"1\",\n\t\t\t\"name\": \"John\",\n\t\t\t\"lastname\": \"Doe\",\n\t\t\t\"glows\": {\n\t\t\t\t\"glow\": [\n\t\t\t\t\t{\n\t\t\t\t\t\t\"color\": \"red\",\n\t\t\t\t\t\t\"size\": \"XL\"\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\t\"color\": \"yellow\",\n\t\t\t\t\t\t\"size\": \"S\"\n\t\t\t\t\t}\n\t\t\t\t]\n\t\t\t}\n\t\t}\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/templates?template=sample.docx&template=sample2.docx&format=PDF",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"templates"
+					],
+					"query": [
+						{
+							"key": "template",
+							"value": "sample.docx"
+						},
+						{
+							"key": "template",
+							"value": "sample2.docx"
+						},
+						{
+							"key": "format",
+							"value": "PDF"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generate template - move to folder",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\t\"order\": {\n\t\t\t\"number\": \"1\",\n\t\t\t\"name\": \"John\",\n\t\t\t\"lastname\": \"Doe\",\n\t\t\t\"glows\": {\n\t\t\t\t\"glow\": [\n\t\t\t\t\t{\n\t\t\t\t\t\t\"color\": \"red\",\n\t\t\t\t\t\t\"size\": \"XL\"\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\t\"color\": \"yellow\",\n\t\t\t\t\t\t\"size\": \"S\"\n\t\t\t\t\t}\n\t\t\t\t]\n\t\t\t}\n\t\t}\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/templates?template=sample.docx&moveTo=abc",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"templates"
+					],
+					"query": [
+						{
+							"key": "template",
+							"value": "sample.docx"
+						},
+						{
+							"key": "moveTo",
+							"value": "abc"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Download generated template",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/templates/file/sample.docx",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"templates",
+						"file",
+						"sample.docx"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
