@@ -8,7 +8,7 @@ cost you embarrassment or even serious fines if not caught in time.
 	- you will need libreoffice (used with jod converter)
 	- setup up the libreoffice path in application.properties
 		ie: "jodconverter.local.office-home=/YOUR_PATH_TO_libreoffice/App/libreoffice"
-	- you will need Java 11 (although JDK 8 should work)
+	- you will need Java 11 (although JDK 8 should work if [pleodox-core](https://github.com/PleoSoft/pleodox-core) si compiled with java 8)
 	- start com.pleosoft.pleodox.community.PleodoxCommunityApplication
 
 - Spring boot will start tomcat on the port 8080
