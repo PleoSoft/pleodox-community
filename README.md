@@ -56,7 +56,7 @@ cost you embarrassment or even serious fines if not caught in time.
 # Run with Docker
 	- create docker image locally: mvn package -P docker
 	- or pull from docker hub: docker pull docker pull pleosoft/pleodox-community
-	- start: docker run -p 8080:8080 pleodox/community
+	- start: docker run -p 8080:8080 pleosoft/pleodox-community
 
 # Create your templates
 use word with content controls (check https://www.youtube.com/watch?v=OtFhIqK0gec)
