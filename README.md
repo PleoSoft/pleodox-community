@@ -44,7 +44,7 @@ cost you embarrassment or even serious fines if not caught in time.
 ```
 - REST API Download generated file
 	-  GET http://localhost:8080/api/templates/file/ee1db92f-54de-4494-9528-be762c97ec65/sample.docx
-	- ee1db92f-54de-4494-9528-be762c97ec65/sample.docx is a response header "location"
+	- ee1db92f-54de-4494-9528-be762c97ec65/sample.docx is a response header "location" from the POST method
 
 
 - [Postman Collection](./PleoDox-Community.postman_collection.json)
