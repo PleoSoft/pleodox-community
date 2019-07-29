@@ -59,6 +59,8 @@ cost you embarrassment or even serious fines if not caught in time.
 	- start: docker run -p 8080:8080 pleosoft/pleodox-community
 
 # Create your templates
+Create new templates video: https://www.youtube.com/watch?v=xi1uRyTQxrE
+
 use word with content controls (check https://www.youtube.com/watch?v=OtFhIqK0gec)
 
 - Create your XML data sample (TestXMLNode xmlns must be PLEODOX)
