@@ -7,7 +7,7 @@
 	<groupId>com.pleosoft.pleodox</groupId>
 	<artifactId>pleodox-community</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.0-RELEASE</version>
+	<version>1.0.1-SNAPSHOT</version>
 
 	<name>pleodox-community</name>
 	<description>PleoDox - Community</description>

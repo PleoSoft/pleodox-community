@@ -95,7 +95,7 @@ public class ApiTemplatingController {
 	@GetMapping(value = "/file/{folder}/{filename:.+}")
 	@ResponseBody
 	public ResponseEntity<Resource> downloadGeneratedFile(@PathVariable String folder, @PathVariable String filename) {
-		Path temporary = storageService.rsolveTemporary(folder + File.separator + filename);
+		Path temporary = storageService.resolveTemporary(folder + File.separator + filename);
 
 		return ResponseEntity.ok()
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + temporary.getFileName().toString() + "\"")
