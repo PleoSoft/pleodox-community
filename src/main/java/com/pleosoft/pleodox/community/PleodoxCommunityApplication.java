@@ -14,18 +14,33 @@
  * limitations under the License.
  */
 
-
 package com.pleosoft.pleodox.community;
 
+import org.alfresco.transformer.config.WebApplicationConfig;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 
 import com.pleosoft.pleodox.community.storage.PleodoxStorageConfigurationProperties;
 
+import io.micrometer.core.instrument.MeterRegistry;
+
 @SpringBootApplication
 @EnableConfigurationProperties({ PleodoxStorageConfigurationProperties.class })
+@Import(WebApplicationConfig.class)
 public class PleodoxCommunityApplication {
+
+	@Value("${container.name}")
+	private String containerName;
+
+	@Bean
+	public MeterRegistryCustomizer<MeterRegistry> metricsCommonTags() {
+		return registry -> registry.config().commonTags("containerName", containerName);
+	}
 
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(PleodoxCommunityApplication.class, args);

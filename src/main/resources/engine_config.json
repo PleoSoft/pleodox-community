@@ -1,0 +1,26 @@
+{  
+  "transformOptions": {
+    "pleodoxOptions": [
+      {"value": {"name": "format"}},
+      {"value": {"name": "readOnly"}},
+      {"value": {"name": "protectionPass"}},
+      {"value": {"name": "template", "required": true}},
+      {"value": {"name": "moveTo"}},
+      {"value": {"name": "mergePdf"}}      
+    ]
+  },
+  "transformers": [
+    {
+      "transformerName": "pleodox",
+      "supportedSourceAndTargetList": [        
+        {"sourceMediaType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "maxSourceSizeBytes": -1, "targetMediaType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document" },
+        {"sourceMediaType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "maxSourceSizeBytes": -1, "targetMediaType": "application/vnd.openxmlformats-officedocument.wordprocessingml.template" },
+        {"sourceMediaType": "application/vnd.openxmlformats-officedocument.wordprocessingml.template", "maxSourceSizeBytes": -1, "targetMediaType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document" },
+        {"sourceMediaType": "application/vnd.openxmlformats-officedocument.wordprocessingml.template", "maxSourceSizeBytes": -1, "targetMediaType": "application/vnd.openxmlformats-officedocument.wordprocessingml.template" }                	
+      ],
+      "transformOptions": [
+        "pleodoxOptions"
+      ]
+    }
+  ]
+}

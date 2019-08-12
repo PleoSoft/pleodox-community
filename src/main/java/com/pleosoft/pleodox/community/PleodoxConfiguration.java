@@ -21,6 +21,7 @@ import java.nio.file.Paths;
 import java.util.zip.Deflater;
 
 import org.jodconverter.DocumentConverter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.zip.transformer.ZipResultType;
@@ -34,6 +35,7 @@ import com.pleosoft.pleodox.boot.service.TransformationService;
 import com.pleosoft.pleodox.boot.storage.DefaultStorageService;
 import com.pleosoft.pleodox.boot.storage.StorageService;
 import com.pleosoft.pleodox.community.storage.PleodoxStorageConfigurationProperties;
+import com.pleosoft.pleodox.community.transformer.PleodoxTransformer;
 
 @Configuration
 public class PleodoxConfiguration {
@@ -78,8 +80,13 @@ public class PleodoxConfiguration {
 	}
 
 	@Bean
+	@ConditionalOnMissingBean
 	public NoopDocumentGenerationHandler documentGenerationHandler() {
 		return new NoopDocumentGenerationHandler();
 	}
 
+	@Bean
+	public PleodoxTransformer pleodoxTransformer() {
+		return new PleodoxTransformer();
+	}
 }
