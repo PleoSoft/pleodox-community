@@ -70,7 +70,7 @@ public class PleodoxController extends AbstractTransformerController {
 		File targetFile = createTargetFile(request, targetFilename);
 
 		// Both files are deleted by TransformInterceptor.afterCompletion
-		processTransform(sourceFile, targetFile, transformRequest.getTransformRequestOptions(), timeout);
+		processTransform(sourceFile, targetFile, "", "", transformRequest.getTransformRequestOptions(), timeout);
 		
 		// TODO Consider streaming the request and response rather than using temporary
 		// files
@@ -85,7 +85,8 @@ public class PleodoxController extends AbstractTransformerController {
 	}
 
 	@Override
-	public void processTransform(File sourceFile, File targetFile, Map<String, String> transformOptions, Long timeout) {
+	public void processTransform(File sourceFile, File targetFile, String sourceMimetype, String targetMimetype,
+			Map<String, String> transformOptions, Long timeout) {
 
 		// TODO Consider streaming the request and response rather than using temporary
 		// files
