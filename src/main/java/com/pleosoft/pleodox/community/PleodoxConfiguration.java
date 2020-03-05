@@ -18,6 +18,7 @@ package com.pleosoft.pleodox.community;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.zip.Deflater;
 
 import org.jodconverter.DocumentConverter;
@@ -28,6 +29,7 @@ import org.springframework.integration.zip.transformer.ZipTransformer;
 
 import com.pleosoft.pleodox.boot.service.DocumentGenerateService;
 import com.pleosoft.pleodox.boot.service.DocumentGenerationHandler;
+import com.pleosoft.pleodox.boot.service.DocxGenerator;
 import com.pleosoft.pleodox.boot.service.NoopDocumentGenerationHandler;
 import com.pleosoft.pleodox.boot.service.TemplatesService;
 import com.pleosoft.pleodox.boot.service.TransformationService;
@@ -60,7 +62,7 @@ public class PleodoxConfiguration {
 			DocumentGenerationHandler documentGenerationHandler) {
 
 		return new TemplatesService(templatingService, storageService, transformationService, zipTransformer,
-				documentGenerationHandler);
+				documentGenerationHandler, Collections.singletonList(new DocxGenerator(templatingService)));
 	}
 
 	@Bean
@@ -81,5 +83,4 @@ public class PleodoxConfiguration {
 	public NoopDocumentGenerationHandler documentGenerationHandler() {
 		return new NoopDocumentGenerationHandler();
 	}
-
 }
