@@ -90,3 +90,7 @@ use word with content controls (check https://www.youtube.com/watch?v=OtFhIqK0ge
 
 - You can also use a MS Plugin "Custom XML Part Editor" in order to change your XML on the fly within MS WORD
 - Upload the template to "pleodox.storage.templatesDir"
+
+Commercial version
+---
+a commercial version supporting WORD and XLS templates (with many other features) is supported and available at [pleodox.com](https://pleodox.com)
