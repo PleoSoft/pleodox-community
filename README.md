@@ -5,14 +5,10 @@ cost you embarrassment or even serious fines if not caught in time.
 
 # Run Locally
 	- git checkout
-	- you will need libreoffice (used with jod converter)
-	- setup up the libreoffice path in application.properties
-		ie: "jodconverter.local.office-home=/YOUR_PATH_TO_libreoffice/App/libreoffice"
 	- you will need Java 11 (although JDK 8 should work if [pleodox-core](https://github.com/PleoSoft/pleodox-core) si compiled with java 8)
 	- start com.pleosoft.pleodox.community.PleodoxCommunityApplication
 
 - Spring boot will start tomcat on the port 8080
-- Jodconverter will start libreoffice on the port 8100
 - Sample templates are configured at 
 	- pleodox.storage.templatesDir=./src/test/resources
 - Swagger UI 
@@ -43,8 +39,8 @@ cost you embarrassment or even serious fines if not caught in time.
 }
 ```
 - REST API Download generated file
-	-  GET http://localhost:8080/api/templates/file/ee1db92f-54de-4494-9528-be762c97ec65/sample.docx
-	- ee1db92f-54de-4494-9528-be762c97ec65/sample.docx is a response header "location" from the POST method
+	-  GET http://localhost:8080/api/templates/file/ee1db92f-54de-4494-9528-be762c97ec65.docx
+	- ee1db92f-54de-4494-9528-be762c97ec65.docx is a response header "location" from the POST method
 
 
 - [Postman Collection](./PleoDox-Community.postman_collection.json)
@@ -88,7 +84,6 @@ use word with content controls (check https://www.youtube.com/watch?v=OtFhIqK0ge
 	- the data values in your XML are just previewable sample data that is not used in the generated document
 	- however it is useful while previewing the template
 
-- You can also use a MS Plugin "Custom XML Part Editor" in order to change your XML on the fly within MS WORD
 - Upload the template to "pleodox.storage.templatesDir"
 
 Commercial version
