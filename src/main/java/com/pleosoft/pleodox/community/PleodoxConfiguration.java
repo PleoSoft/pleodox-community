@@ -23,9 +23,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.pleosoft.pleodox.DocxGenerator;
-import com.pleosoft.pleodox.NoopDocumentGenerationHandler;
 import com.pleosoft.pleodox.community.storage.PleodoxStorageConfigurationProperties;
-import com.pleosoft.pleodoxstorage.DefaultStorageService;
+import com.pleosoft.pleodoxstorage.FileSystemStorageService;
 import com.pleosoft.pleodoxstorage.StorageService;
 
 @Configuration
@@ -36,17 +35,11 @@ public class PleodoxConfiguration {
 		final String templates = properties.getTemplatesDir();
 		final String generated = properties.getGeneratedDir();
 
-		return new DefaultStorageService(
+		return new FileSystemStorageService(
 				generated != null ? Paths.get(generated) : Paths.get(System.getProperty("java.io.tmpdir")),
 				templates != null ? Paths.get(templates) : null);
 	}
 
-
-	@Bean
-	public NoopDocumentGenerationHandler documentGenerationHandler() {
-		return new NoopDocumentGenerationHandler();
-	}
-	
 	@Bean
 	public DocxGenerator docxGenerator() {
 		return new DocxGenerator();
