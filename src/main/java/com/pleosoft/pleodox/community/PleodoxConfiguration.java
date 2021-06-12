@@ -18,24 +18,15 @@ package com.pleosoft.pleodox.community;
 
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.zip.Deflater;
 
-import org.jodconverter.DocumentConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.integration.zip.transformer.ZipResultType;
-import org.springframework.integration.zip.transformer.ZipTransformer;
 
-import com.pleosoft.pleodox.boot.service.DocumentGenerateService;
-import com.pleosoft.pleodox.boot.service.DocumentGenerationHandler;
-import com.pleosoft.pleodox.boot.service.DocxGenerator;
-import com.pleosoft.pleodox.boot.service.NoopDocumentGenerationHandler;
-import com.pleosoft.pleodox.boot.service.TemplatesService;
-import com.pleosoft.pleodox.boot.service.TransformationService;
-import com.pleosoft.pleodox.boot.storage.DefaultStorageService;
-import com.pleosoft.pleodox.boot.storage.StorageService;
+import com.pleosoft.pleodox.DocxGenerator;
+import com.pleosoft.pleodox.NoopDocumentGenerationHandler;
 import com.pleosoft.pleodox.community.storage.PleodoxStorageConfigurationProperties;
+import com.pleosoft.pleodoxstorage.DefaultStorageService;
+import com.pleosoft.pleodoxstorage.StorageService;
 
 @Configuration
 public class PleodoxConfiguration {
@@ -50,37 +41,14 @@ public class PleodoxConfiguration {
 				templates != null ? Paths.get(templates) : null);
 	}
 
-	@Bean
-	public DocumentGenerateService templatingService() {
-		final DocumentGenerateService templatingService = new DocumentGenerateService();
-		return templatingService;
-	}
-
-	@Bean
-	public TemplatesService templatesService(DocumentGenerateService templatingService, StorageService storageService,
-			TransformationService transformationService, ZipTransformer zipTransformer,
-			DocumentGenerationHandler documentGenerationHandler) {
-
-		return new TemplatesService(templatingService, storageService, transformationService, zipTransformer,
-				documentGenerationHandler, Collections.singletonList(new DocxGenerator(templatingService)));
-	}
-
-	@Bean
-	public TransformationService transformationService(final DocumentConverter converter) {
-		return new TransformationService(converter);
-	}
-
-	@Bean
-	public ZipTransformer zipTransformer() {
-		final ZipTransformer zipTransformer = new ZipTransformer();
-		zipTransformer.setCompressionLevel(Deflater.BEST_COMPRESSION);
-		zipTransformer.setZipResultType(ZipResultType.FILE);
-		zipTransformer.setDeleteFiles(true);
-		return zipTransformer;
-	}
 
 	@Bean
 	public NoopDocumentGenerationHandler documentGenerationHandler() {
 		return new NoopDocumentGenerationHandler();
+	}
+	
+	@Bean
+	public DocxGenerator docxGenerator() {
+		return new DocxGenerator();
 	}
 }

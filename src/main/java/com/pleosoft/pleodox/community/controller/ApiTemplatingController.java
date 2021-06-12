@@ -16,16 +16,16 @@
 
 package com.pleosoft.pleodox.community.controller;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
+import org.docx4j.Docx4J;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,12 +47,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pleosoft.pleodox.boot.data.DataRoot;
-import com.pleosoft.pleodox.boot.data.TemplateOutputFormat;
-import com.pleosoft.pleodox.boot.service.TemplateFailedException;
-import com.pleosoft.pleodox.boot.service.TemplatesService;
-import com.pleosoft.pleodox.boot.storage.StorageFileNotFoundException;
-import com.pleosoft.pleodox.boot.storage.StorageService;
+import com.pleosoft.pleodox.DocxGenerator;
+import com.pleosoft.pleodox.TemplateFailedException;
+import com.pleosoft.pleodox.data.DataRoot;
+import com.pleosoft.pleodox.data.TemplateOptions;
+import com.pleosoft.pleodoxstorage.StorageFileNotFoundException;
+import com.pleosoft.pleodoxstorage.StorageService;
 
 @RestController
 @RequestMapping("/api/templates")
@@ -60,45 +60,61 @@ public class ApiTemplatingController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ApiTemplatingController.class);
 
-	private final TemplatesService templatesService;
+	private final DocxGenerator docxGenerator;
 	private final StorageService storageService;
 
 	@Autowired
-	public ApiTemplatingController(TemplatesService templatesService, StorageService storageService) {
-		Assert.notNull(templatesService, "templatesService must not be null");
+	public ApiTemplatingController(DocxGenerator docxGenerator, StorageService storageService) {
+		Assert.notNull(docxGenerator, "docxGenerator must not be null");
 		Assert.notNull(storageService, "storageService must not be null");
 
-		this.templatesService = templatesService;
+		this.docxGenerator = docxGenerator;
 		this.storageService = storageService;
 	}
 
 	@PostMapping(consumes = { "application/json" })
-	public ResponseEntity<?> generateDocument(@RequestBody Map<String, Object> request,
-			@RequestParam(defaultValue = "DOCX") TemplateOutputFormat format,
+	public ResponseEntity<?> generateDocument(@RequestBody DataRoot dataRoot,
 			@RequestParam(defaultValue = "false") Boolean readOnly,
-			@RequestParam(required = false) String protectionPass,
-			@RequestParam(name = "template") List<String> templates, @RequestParam(required = false) String moveTo,
-			@RequestParam(defaultValue = "false") Boolean mergePdf) throws FileNotFoundException, IOException {
+			@RequestParam(required = false) String protectionPass, @RequestParam(name = "template") String template)
+			throws FileNotFoundException, IOException {
 
-		if (!StringUtils.hasText(moveTo)) {
-			moveTo = UUID.randomUUID().toString();
+		String cleanTemplatePath = StringUtils.cleanPath(template);
+		TemplateOptions templateOptions = new TemplateOptions().addOption("readOnly", readOnly)
+				.addOption("protectionPass", protectionPass).addOption("templatename", cleanTemplatePath);
+
+		try (InputStream is = storageService.loadAsTemplateInputStream(cleanTemplatePath)) {
+			final String finalName = UUID.randomUUID().toString() + ".docx";
+			Path tempResource = storageService.storeTemporary(is, finalName);
+
+			try (OutputStream os = Files.newOutputStream(tempResource)) {
+				try (InputStream templateStream = storageService.loadAsTemplateInputStream(cleanTemplatePath)) {
+					try {
+						docxGenerator.generate(templateStream, os, dataRoot, templateOptions,
+								Docx4J.FLAG_BIND_INSERT_XML | Docx4J.FLAG_BIND_BIND_XML);
+					} catch (Throwable e) {
+						if (tempResource != null) {
+							try {
+								Files.deleteIfExists(tempResource);
+							} catch (Exception e1) {
+								;
+							}
+						}
+						throw new TemplateFailedException(e);
+					}
+				}
+			}
+			return ResponseEntity.ok().header("location", tempResource.getFileName().toString()).build();
 		}
-
-		DataRoot dataRoot = new DataRoot();
-		dataRoot.putAll(request);
-		Path resource = templatesService.generateDocument(dataRoot, format, readOnly, protectionPass, templates, moveTo,
-				null, mergePdf);
-
-		return ResponseEntity.ok().header("location", getFileWithParentFolder(resource)).build();
 	}
-	
-	@GetMapping(value = "/file/{folder}/{filename:.+}")
+
+	@GetMapping(value = "/file/{filename:.+}")
 	@ResponseBody
-	public ResponseEntity<Resource> downloadGeneratedFile(@PathVariable String folder, @PathVariable String filename) {
-		Path temporary = storageService.resolveTemporary(folder + File.separator + filename);
+	public ResponseEntity<Resource> downloadGeneratedFile(@PathVariable String filename) {
+		Path temporary = storageService.resolveTemporary(filename);
 
 		return ResponseEntity.ok()
-				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + temporary.getFileName().toString() + "\"")
+				.header(HttpHeaders.CONTENT_DISPOSITION,
+						"attachment; filename=\"" + temporary.getFileName().toString() + "\"")
 				.body(new FileSystemResource(temporary));
 	}
 
@@ -120,14 +136,5 @@ public class ApiTemplatingController {
 	public ResponseEntity<?> handleTemplateFailedException(Exception exc) {
 		LOG.error("Error while executing request", exc);
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).header("error", "internal server error").build();
-	}
-
-	private static final String getFileWithParentFolder(final Path resource) throws IOException {
-		return getFileWithParentFolder(new FileSystemResource(resource));
-	}
-	
-	private static final String getFileWithParentFolder(final Resource resource) throws IOException {
-		return StringUtils.cleanPath(
-				Paths.get(resource.getURI()).getParent().getFileName().resolve(resource.getFilename()).toString());
 	}
 }
