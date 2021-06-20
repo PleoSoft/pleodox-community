@@ -24,8 +24,8 @@ import org.springframework.context.annotation.Configuration;
 
 import com.pleosoft.pleodox.DocxGenerator;
 import com.pleosoft.pleodox.community.storage.PleodoxStorageConfigurationProperties;
-import com.pleosoft.pleodoxstorage.FileSystemStorageService;
-import com.pleosoft.pleodoxstorage.StorageService;
+import com.pleosoft.pleodox.storage.FileSystemStorageService;
+import com.pleosoft.pleodox.storage.StorageService;
 
 @Configuration
 public class PleodoxConfiguration {

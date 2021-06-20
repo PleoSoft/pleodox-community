@@ -51,8 +51,8 @@ import com.pleosoft.pleodox.DocxGenerator;
 import com.pleosoft.pleodox.TemplateFailedException;
 import com.pleosoft.pleodox.data.DataRoot;
 import com.pleosoft.pleodox.data.TemplateOptions;
-import com.pleosoft.pleodoxstorage.StorageFileNotFoundException;
-import com.pleosoft.pleodoxstorage.StorageService;
+import com.pleosoft.pleodox.storage.StorageFileNotFoundException;
+import com.pleosoft.pleodox.storage.StorageService;
 
 @RestController
 @RequestMapping("/api/templates")
