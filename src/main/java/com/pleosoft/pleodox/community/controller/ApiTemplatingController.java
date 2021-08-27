@@ -25,7 +25,6 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.UUID;
 
-import org.docx4j.Docx4J;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,9 +48,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pleosoft.pleodox.DocxGenerator;
 import com.pleosoft.pleodox.TemplateFailedException;
-import com.pleosoft.pleodox.data.DataRoot;
+import com.pleosoft.pleodox.data.PleodoxRoot.PleodoxRequest;
 import com.pleosoft.pleodox.data.TemplateOptions;
-import com.pleosoft.pleodox.storage.StorageFileNotFoundException;
+import com.pleosoft.pleodox.storage.StoragePathNotFoundException;
 import com.pleosoft.pleodox.storage.StorageService;
 
 @RestController
@@ -73,7 +72,7 @@ public class ApiTemplatingController {
 	}
 
 	@PostMapping(consumes = { "application/json" })
-	public ResponseEntity<?> generateDocument(@RequestBody DataRoot dataRoot,
+	public ResponseEntity<?> generateDocument(@RequestBody PleodoxRequest request,
 			@RequestParam(defaultValue = "false") Boolean readOnly,
 			@RequestParam(required = false) String protectionPass, @RequestParam(name = "template") String template)
 			throws FileNotFoundException, IOException {
@@ -82,15 +81,15 @@ public class ApiTemplatingController {
 		TemplateOptions templateOptions = new TemplateOptions().addOption("readOnly", readOnly)
 				.addOption("protectionPass", protectionPass).addOption("templatename", cleanTemplatePath);
 
-		try (InputStream is = storageService.loadAsTemplateInputStream(cleanTemplatePath)) {
+		try (InputStream is = asResource(storageService.resolveTemplate(cleanTemplatePath)).getInputStream()) {
 			final String finalName = UUID.randomUUID().toString() + ".docx";
 			Path tempResource = storageService.storeTemporary(is, finalName);
 
 			try (OutputStream os = Files.newOutputStream(tempResource)) {
-				try (InputStream templateStream = storageService.loadAsTemplateInputStream(cleanTemplatePath)) {
+				try (InputStream templateStream = asResource(storageService.resolveTemplate(cleanTemplatePath))
+						.getInputStream()) {
 					try {
-						docxGenerator.generate(templateStream, os, dataRoot, templateOptions,
-								Docx4J.FLAG_BIND_INSERT_XML | Docx4J.FLAG_BIND_BIND_XML);
+						docxGenerator.generate(templateStream, os, request, templateOptions);
 					} catch (Throwable e) {
 						if (tempResource != null) {
 							try {
@@ -107,6 +106,10 @@ public class ApiTemplatingController {
 		}
 	}
 
+	private Resource asResource(Path path) {
+		return new FileSystemResource(path.toAbsolutePath());
+	}
+
 	@GetMapping(value = "/file/{filename:.+}")
 	@ResponseBody
 	public ResponseEntity<Resource> downloadGeneratedFile(@PathVariable String filename) {
@@ -118,7 +121,7 @@ public class ApiTemplatingController {
 				.body(new FileSystemResource(temporary));
 	}
 
-	@ExceptionHandler({ TemplateFailedException.class, StorageFileNotFoundException.class, FileNotFoundException.class,
+	@ExceptionHandler({ TemplateFailedException.class, StoragePathNotFoundException.class, FileNotFoundException.class,
 			NoSuchFileException.class })
 	public ResponseEntity<?> handleFileSystemException(Exception exc) {
 		LOG.error("Error while executing request", exc);
