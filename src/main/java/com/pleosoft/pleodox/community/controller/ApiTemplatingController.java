@@ -50,7 +50,6 @@ import com.pleosoft.pleodox.DocxGenerator;
 import com.pleosoft.pleodox.TemplateFailedException;
 import com.pleosoft.pleodox.data.PleodoxRoot.PleodoxRequest;
 import com.pleosoft.pleodox.data.TemplateOptions;
-import com.pleosoft.pleodox.storage.StoragePathNotFoundException;
 import com.pleosoft.pleodox.storage.StorageService;
 
 @RestController
@@ -121,8 +120,7 @@ public class ApiTemplatingController {
 				.body(new FileSystemResource(temporary));
 	}
 
-	@ExceptionHandler({ TemplateFailedException.class, StoragePathNotFoundException.class, FileNotFoundException.class,
-			NoSuchFileException.class })
+	@ExceptionHandler({ TemplateFailedException.class, FileNotFoundException.class, NoSuchFileException.class })
 	public ResponseEntity<?> handleFileSystemException(Exception exc) {
 		LOG.error("Error while executing request", exc);
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).header("error", "file not found").build();
